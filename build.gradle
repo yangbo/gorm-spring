@@ -1,10 +1,18 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
 plugins {
     id 'groovy'
     id 'java-library'
+    id 'maven-publish'
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 group 'com.telecwin'
-version '1.0'
+version '1.0.0'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -13,9 +21,7 @@ targetCompatibility = '1.8'
 
 repositories {
     mavenCentral()
-//    flatDir {
-//        dir('./libs')
-//    }
+    jcenter()
 }
 
 dependencies {
@@ -30,4 +36,90 @@ dependencies {
     // use sqlite-db
     //testImplementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3'
     //testImplementation group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.1'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc.failOnError = false
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "MIT"
+            url "https://github.com/yangbo/gorm-spring/blob/main/LICENSE"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "bobyang"
+            name "Bob Yang"
+            email "bo.yang@telecwin.com"
+        }
+    }
+    scm {
+        url "https://github.com/yangbo/gorm-spring"
+    }
+}
+
+publishing {
+    publications {
+        mavenPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            groupId 'com.telecwin'
+            artifactId 'gorm-spring'
+            version '1.0.0'
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'A library that make configure GORM in spring environment easy.')
+                root.appendNode('name', 'GORM Spring integration library')
+                root.appendNode('url', 'https://github.com/yangbo/gorm-spring')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = 'myRepo'
+            url = "file://${buildDir}/repo"
+        }
+    }
+
+    bintray {
+        user = System.getenv('BINTRAY_USER')
+        key = System.getenv('BINTRAY_KEY')
+        publications = ['mavenPublication']
+
+        pkg {
+            repo = 'libs'
+            name = 'gorm-spring'
+            userOrg = 'bobyang'
+            licenses = ['MIT']
+            vcsUrl = 'https://github.com/yangbo/gorm-spring.git'
+            version {
+                name = '1.0.0'
+                desc = '1.0.0'
+                released  = new Date()
+            }
+        }
+    }
 }
