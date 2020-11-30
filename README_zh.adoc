@@ -7,22 +7,68 @@ gorm-spring 可以简化‘实体’和‘Data Service’的配置，让你可�
 == 配置
 
 === 1. 添加 gradle 依赖
-[source]
+[source,groovy]
 ----
+repositories {
+    jcenter()
+    maven {
+        url "https://dl.bintray.com/bobyang/libs"
+    }
+}
+dependencies {
+    implementation 'com.telecwin:gorm-spring:1.0.0'
+    // use some hibernate dialect
+    // implementation group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.1'
+}
 ----
 
 === 2. 配置 HibernateDatastore
 
 我们可以指定‘实体’所在的包名，在此包下的所有带 @Entity 注解的类会被自动注册为GORM实体。
 
-[source]
+[source,xml]
 ----
+<!-- 配置 gorm hibernate data store.
+注意：JVM中只能有一个 HibernateDatastore bean，否则事务使用会出错。
+参考：https://blog.csdn.net/yangbo_hr/article/details/110308332
+-->
+<bean id="hibernateDataStore" class="com.telecwin.gorm.spring.HibernateDatastoreFactoryBean">
+    <property name="configure">
+        <map>
+            <!-- create: 启动时自动删除表、重新创建表，开发时才用; none : 什么都不做，正式上线用 -->
+            <entry key="hibernate.hbm2ddl.auto" value="create"/>
+            <entry key="dataSource.logSql" value="true"/>
+            <entry key="dataSource.formatSql" value="true"/>
+            <entry key="dataSource.url" value="jdbc:sqlite:file:data/db_sqlite/comfort.db3"/>
+            <entry key="dataSource.options">
+                <map>
+                    <entry key="escapeProcessing" value="false"/>
+                    <entry key="date_class" value="TEXT"/>
+                    <entry key="date_string_format" value="yyyy-MM-dd HH:mm:ss"/>
+                </map>
+            </entry>
+            <entry key="hibernate.dialect" value="org.sqlite.hibernate.dialect.SQLiteDialect"/>
+        </map>
+    </property>
+    <!-- 实体类所在的包名 -->
+    <property name="packages">
+        <list>
+            <value>com.telecwin.shaking.po</value>
+            <value>com.telecwin.geo.po.wavechart</value>
+        </list>
+    </property>
+</bean>
 ----
 
 === 3. 配置 GormScanner 来扫描 GORM data services
 
-[source]
+[source, xml]
 ----
+<!-- 自动扫描服务的scanner -->
+<bean id="gormScanner" class="com.telecwin.gorm.spring.GormScanner">
+    <property name="hibernateDataStore" ref="hibernateDataStore"/>
+    <property name="servicePackages" value="com.telecwin.shaking.service"/>
+</bean>
 ----
 
 === 4. 在 'entity packages' 下添加实体类

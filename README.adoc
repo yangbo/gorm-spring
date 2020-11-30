@@ -9,19 +9,65 @@ link:README_zh.adoc[中文文档]
 === 1. Add gradle dependencies
 [source]
 ----
+repositories {
+    jcenter()
+    maven {
+        url "https://dl.bintray.com/bobyang/libs"
+    }
+}
+dependencies {
+    implementation 'com.telecwin:gorm-spring:1.0.0'
+    // use some hibernate dialect
+    // implementation group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.1'
+    ...
+}
 ----
 
 === 2. Configure HibernateDatastore
 You can specify entity packages, then the @Entity class under that packages will be automatically register as GORM entity.
 
-[source]
+[source,xml]
 ----
+<!-- configure gorm hibernate data store.
+note：JVM can only has one HibernateDatastore bean, or else @Transactional annotation may failed.
+Chinese Reference：https://blog.csdn.net/yangbo_hr/article/details/110308332
+-->
+<bean id="hibernateDataStore" class="com.telecwin.gorm.spring.HibernateDatastoreFactoryBean">
+    <property name="configure">
+        <map>
+            <!-- create: for development; none: for production -->
+            <entry key="hibernate.hbm2ddl.auto" value="create"/>
+            <entry key="dataSource.logSql" value="true"/>
+            <entry key="dataSource.formatSql" value="true"/>
+            <entry key="dataSource.url" value="jdbc:sqlite:file:data/db_sqlite/comfort.db3"/>
+            <entry key="dataSource.options">
+                <map>
+                    <entry key="escapeProcessing" value="false"/>
+                    <entry key="date_class" value="TEXT"/>
+                    <entry key="date_string_format" value="yyyy-MM-dd HH:mm:ss"/>
+                </map>
+            </entry>
+            <entry key="hibernate.dialect" value="org.sqlite.hibernate.dialect.SQLiteDialect"/>
+        </map>
+    </property>
+    <!-- entity packages -->
+    <property name="packages">
+        <list>
+            <value>com.telecwin.shaking.po</value>
+            <value>com.telecwin.geo.po.wavechart</value>
+        </list>
+    </property>
+</bean>
 ----
 
 === 3. Configure GormScanner to scan GORM data services
 
-[source]
+[source,xml]
 ----
+<bean id="gormScanner" class="com.telecwin.gorm.spring.GormScanner">
+    <property name="hibernateDataStore" ref="hibernateDataStore"/>
+    <property name="servicePackages" value="com.telecwin.shaking.service"/>
+</bean>
 ----
 
 === 4. Add entity under 'entity packages'
