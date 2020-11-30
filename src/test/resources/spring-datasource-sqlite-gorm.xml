@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd"
+>
+    <!-- 配置 gorm hibernate data store.
+    注意：JVM中只能有一个 HibernateDatastore bean，否则事务使用会出错。
+    参考：https://blog.csdn.net/yangbo_hr/article/details/110308332
+    -->
+    <bean id="hibernateDataStore" class="com.telecwin.gorm.spring.HibernateDatastoreFactoryBean">
+        <property name="configure">
+            <map>
+                <!-- create: 启动时自动删除表、重新创建表，开发时才用; none : 什么都不做，正式上线用 -->
+                <entry key="hibernate.hbm2ddl.auto" value="create"/>
+                <entry key="dataSource.logSql" value="true"/>
+                <entry key="dataSource.formatSql" value="true"/>
+                <entry key="dataSource.url" value="jdbc:hsqldb:mem:."/>
+<!--                <entry key="dataSource.url" value="jdbc:sqlite:file:data/test.db3"/>-->
+                <entry key="dataSource.options">
+                    <map>
+                        <entry key="escapeProcessing" value="false"/>
+                        <entry key="date_class" value="TEXT"/>
+                        <entry key="date_string_format" value="yyyy-MM-dd HH:mm:ss"/>
+                    </map>
+                </entry>
+                <entry key="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+<!--                <entry key="hibernate.dialect" value="org.sqlite.hibernate.dialect.SQLiteDialect"/>-->
+            </map>
+        </property>
+        <!-- 实体类所在的包名 -->
+        <property name="packages">
+            <list>
+                <value>com.telecwin.gorm.spring.po</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 自动扫描服务的scanner -->
+    <bean id="gormScanner" class="com.telecwin.gorm.spring.GormScanner">
+        <property name="hibernateDataStore" ref="hibernateDataStore"/>
+        <property name="servicePackages" value="com.telecwin.gorm.spring.service"/>
+    </bean>
+</beans>

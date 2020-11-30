@@ -1,0 +1,31 @@
+= gorm-spring
+
+A library that make configure GORM in spring environment easy.
+
+link:README_zh.adoc[中文文档]
+
+== Configure
+
+=== 1. Add gradle dependencies
+[source]
+----
+----
+
+=== 2. Configure HibernateDatastore
+You can specify entity packages, then the @Entity class under that packages will be automatically register as GORM entity.
+
+[source]
+----
+----
+
+=== 3. Configure GormScanner to scan GORM data services
+
+[source]
+----
+----
+
+=== 4. Add entity under 'entity packages'
+
+=== 5. Add data service under 'service packages'
+
+Done!

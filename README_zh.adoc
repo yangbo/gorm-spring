@@ -1,0 +1,32 @@
+= gorm-spring
+
+让GORM在Spring中使用更方便的一个库。
+
+gorm-spring 可以简化‘实体’和‘Data Service’的配置，让你可以像在 Grails 中使用 GORM 那样在独立的 Spring 项目中使用它。
+
+== 配置
+
+=== 1. 添加 gradle 依赖
+[source]
+----
+----
+
+=== 2. 配置 HibernateDatastore
+
+我们可以指定‘实体’所在的包名，在此包下的所有带 @Entity 注解的类会被自动注册为GORM实体。
+
+[source]
+----
+----
+
+=== 3. 配置 GormScanner 来扫描 GORM data services
+
+[source]
+----
+----
+
+=== 4. 在 'entity packages' 下添加实体类
+
+=== 5. 在 'service packages' 下添加 GORM Data Service 类
+
+完成！
