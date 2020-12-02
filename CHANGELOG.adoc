@@ -1,0 +1,8 @@
+= gorm-spring change log
+
+
+== v1.0.0
+* release initial version
+
+== v1.0.1
+* add ignored classes name pattern.

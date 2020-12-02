@@ -30,6 +30,11 @@ class GormScanner implements BeanDefinitionRegistryPostProcessor, BeanNameAware 
      */
     String[] ignoredPackages = []
     /**
+     * Ignored class name pattern.
+     * Matched class will not be register as bean.
+     */
+    String ignoredClassNamePattern = "\\\$.*Implementation"
+    /**
      * Scanned interfaces or classes that annotated with these Annotation
      */
     Class[] serviceAnnotations = [GormService]
@@ -90,7 +95,16 @@ class GormScanner implements BeanDefinitionRegistryPostProcessor, BeanNameAware 
         SpringClassScanner springClassScanner = new SpringClassScanner(packages: servicePackages,
                 annotations: serviceAnnotations, ignoredPackages: ignoredPackages,
                 classLoader: ClassLoader.getSystemClassLoader())
-        springClassScanner.getClassFromPackages()
+        def classes = springClassScanner.getClassFromPackages()
+        // ignore special classes such as GORM server transformer generated implementation classes
+        classes.findAll {
+            if (it.simpleName ==~ ignoredClassNamePattern) {
+                log.debug("Ignore class by class-name-pattern. class=${it}, pattern=${ignoredClassNamePattern}")
+                return false
+            } else {
+                return true
+            }
+        }
     }
 
     @Override
