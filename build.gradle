@@ -116,8 +116,8 @@ publishing {
             licenses = ['MIT']
             vcsUrl = 'https://github.com/yangbo/gorm-spring.git'
             version {
-                name = '1.0.0'
-                desc = '1.0.0'
+                name = project.version
+                desc = project.version
                 released  = new Date()
             }
         }
