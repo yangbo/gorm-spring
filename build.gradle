@@ -86,7 +86,7 @@ publishing {
             }
             groupId 'com.telecwin'
             artifactId 'gorm-spring'
-            version '1.0.0'
+            version version
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'A library that make configure GORM in spring environment easy.')
