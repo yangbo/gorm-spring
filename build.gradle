@@ -1,14 +1,12 @@
 buildscript {
     repositories {
         mavenCentral()
-        //jcenter()
     }
 }
 plugins {
     id 'groovy'
     id 'java-library'
     id 'maven-publish'
-    //id "com.jfrog.bintray" version "1.8.5"
 }
 
 group 'com.telecwin'
@@ -21,7 +19,6 @@ version '1.0.1'
 
 repositories {
     mavenCentral()
-    //jcenter()
 }
 
 dependencies {
@@ -33,14 +30,15 @@ dependencies {
     // for junit test
     testImplementation(platform('org.junit:junit-bom:5.8.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
+    // for spock test
+    // testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.2-M1-groovy-3.0'
 
     // use hsql-db
-    testImplementation group: 'org.spockframework', name: 'spock-core', version: '2.2-M1-groovy-3.0'
-    testImplementation group: 'org.hsqldb', name: 'hsqldb', version: '2.4.0'
+    //testImplementation group: 'org.hsqldb', name: 'hsqldb', version: '2.4.0'
 
     // use sqlite-db
-    //testImplementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3'
-    //testImplementation group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.1'
+    testImplementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.32.3'
+    testImplementation group: 'com.github.gwenn', name: 'sqlite-dialect', version: '0.1.1'
 }
 
 test {
@@ -51,13 +49,13 @@ test {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
+    archiveClassifier.set('sources')
     from sourceSets.main.allSource
 }
 
 javadoc.failOnError = false
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from javadoc.destinationDir
 }
 

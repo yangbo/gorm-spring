@@ -14,8 +14,8 @@
                 <entry key="hibernate.hbm2ddl.auto" value="create"/>
                 <entry key="dataSource.logSql" value="true"/>
                 <entry key="dataSource.formatSql" value="true"/>
-<!--                <entry key="dataSource.url" value="jdbc:hsqldb:mem:."/>-->
-                <entry key="dataSource.url" value="jdbc:sqlite:file:build/test.db3"/>
+                <entry key="dataSource.url" value="jdbc:hsqldb:mem:."/>
+<!--                <entry key="dataSource.url" value="jdbc:sqlite:file:data/test.db3"/>-->
                 <entry key="dataSource.options">
                     <map>
                         <entry key="escapeProcessing" value="false"/>
@@ -23,8 +23,8 @@
                         <entry key="date_string_format" value="yyyy-MM-dd HH:mm:ss"/>
                     </map>
                 </entry>
-<!--                <entry key="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>-->
-                <entry key="hibernate.dialect" value="org.sqlite.hibernate.dialect.SQLiteDialect"/>
+                <entry key="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+<!--                <entry key="hibernate.dialect" value="org.sqlite.hibernate.dialect.SQLiteDialect"/>-->
             </map>
         </property>
         <!-- 实体类所在的包名 -->

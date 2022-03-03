@@ -8,7 +8,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext
 import spock.lang.Ignore
 import spock.lang.Specification
 
-@Ignore
 class ServiceTest extends Specification {
 
     PersonService personService
