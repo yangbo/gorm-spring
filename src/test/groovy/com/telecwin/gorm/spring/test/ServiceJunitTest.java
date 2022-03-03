@@ -17,6 +17,7 @@ public class ServiceJunitTest {
     @BeforeEach
     void setup() {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-datasource-sqlite-gorm.xml");
+//        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-datasource-hsql-gorm.xml");
         personService = context.getBean(PersonService.class);
         serverService = context.getBean(ServerService.class);
     }
