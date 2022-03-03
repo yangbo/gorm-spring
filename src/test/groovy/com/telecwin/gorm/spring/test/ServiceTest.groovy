@@ -5,8 +5,10 @@ import com.telecwin.gorm.spring.po.Server
 import com.telecwin.gorm.spring.service.PersonService
 import com.telecwin.gorm.spring.service.ServerService
 import org.springframework.context.support.ClassPathXmlApplicationContext
+import spock.lang.Ignore
 import spock.lang.Specification
 
+@Ignore
 class ServiceTest extends Specification {
 
     PersonService personService
